@@ -1,9 +1,10 @@
 require("dotenv").config()
 
 const express = require("express")
-const mongoose = require("mongoose")
-
 const app = express()
+
+const authRouter = require("./routes/auth")
+const connectDB = require("./db")
 
 const port = process.env.PORT || 3000
 
@@ -16,6 +17,27 @@ app.get("/", (req, res) => {
     res.send("Welcome home")
 })
 
+app.use("/auth", authRouter)
+
+
+// Handle unknown routes
+app.use((req, res, next) => {
+    res.status(404).send({
+        message: "Sorry, the route you requested does not exist!"
+    })
+    next()
+})
+
+// Error handler
+app.use((err, req, res, next) => {
+    res.status(500).send({
+        message: "An error occured. Oops!",
+        error: err
+    })
+})
+
 app.listen(port, () => {
     console.log("App is listening on http://localhost:" + port)
 })
+
+connectDB()
