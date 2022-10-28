@@ -65,9 +65,7 @@ authRouter.post("/signin", async (req, res) => {
 
     if (passwordIsValid) {
         const payload = {
-            first_name: user.first_name,
-            last_name: user.last_name,
-            email: user.email
+            id: user._id
         }
         const JWT_SECRET = process.env.JWT_SECRET
         const token = jwt.sign(payload, JWT_SECRET, {expiresIn: "1h"})

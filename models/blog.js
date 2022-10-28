@@ -10,7 +10,8 @@ const blogSchema = new Schema({
     description: String,
     author: {
         type: Schema.Types.ObjectId,
-        ref: User
+        ref: User,
+        required: true
     },
     state: {
         type: String,
