@@ -43,7 +43,7 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-    res.status(500).send({
+    res.status(err.status || 500).send({
         message: "An error occured. Oops!",
         error: err
     })

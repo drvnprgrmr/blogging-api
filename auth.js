@@ -10,7 +10,7 @@ passport.use(new JWTStrategy(
         secretOrKey: process.env.JWT_SECRET,
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
     },
-    (payload, done) => {
+    async (payload, done) => {
         // Retrieve the user's id from the payload
         let userId =  payload.id
         if (!userId) {
@@ -18,7 +18,13 @@ passport.use(new JWTStrategy(
             err.status = 400
             return done(err)
         }
-        done(null, {id: payload.id})
+        const user = await User.findById(userId).exec()
+        if (!user) {
+            const err = new Error("User does not exist (maybe was deleted)")
+            err.status = 404
+            return done(err)
+        }
+        done(null, {id: userId})
     }
 ))
 
@@ -28,13 +34,15 @@ function authenticate(req, res, next) {
     passport.authenticate(
         "jwt", 
         {session: false}, 
-        (err, user, info, status) => {
-            console.log("Error => ", err)
-            console.log("User => ", user)
-            console.log("Info => ", info)
-            console.log("Status => ", status)
+        (err, user, info, status) => {    
+            // Return errors from jwt strategy
+            if (err) return next(err)
 
-            res.end()
+            // Return other errors
+            if (info) return next(info)
+
+            // Continue 
+            next()
         }
 
 
@@ -43,3 +51,4 @@ function authenticate(req, res, next) {
 
 
 
+module.exports = authenticate
