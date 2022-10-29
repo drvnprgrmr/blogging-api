@@ -2,25 +2,16 @@ require("dotenv").config()
 
 const express = require("express")
 const passport = require("passport")
-const JWTStrategy = require("passport-jwt").Strategy
-const ExtractJWT = require("passport-jwt").ExtractJwt
+
 
 const authRouter = require("./routes/auth")
 const blogRouter = require("./routes/blog")
 const writerRouter = require("./routes/writer")
-const connectDB = require("./db")
 
-passport.use(new JWTStrategy(
-    {
-        secretOrKey: process.env.JWT_SECRET,
-        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
-    },
-    (payload, done) => {
-        // Retrieve the user's id from the payload
-        console.log(payload)
-        done(null, {id: payload.id})
-    }
-))
+const connectDB = require("./db")
+const authenticate = require("./auth")
+
+
 
 const port = process.env.PORT || 3000
 const app = express()
@@ -38,7 +29,7 @@ app.use("/auth", authRouter)
 app.use("/blog", blogRouter)
 app.use(
     "/writer",
-    passport.authenticate("jwt", {session: false}, (...args) => {console.log(...args)}),
+    authenticate,
     writerRouter
 )
 
