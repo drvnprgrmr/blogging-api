@@ -1,29 +1,36 @@
 const express = require("express")
 const Blog = require("../models/blog")
+const User = require("../models/user")
 
 const blogRouter = express.Router()
 
-blogRouter.get("/", async(req, res) => {
+blogRouter.get("/", async (req, res, next) => {
     const filterQuery = {}
     const sortQuery = {}
 
     // Filter/search params
-    const author = req.params.author
-    const title = req.params.title
-    const tags = req.params.tags
+    const author = req.query.author
+    const title = req.query.title
+    const tags = req.query.tags
 
     // Order/sorting params
-    const read_count = req.params.read_count
-    const reading_time = req.params.reading_time
-    const timestamp = req.params.timestamp
+    const read_count = req.query.read_count
+    const reading_time = req.query.reading_time
+    const timestamp = req.query.timestamp
 
     // Handle possible filters
-    author ? (filterQuery.author = author) : null
-    title ? (filterQuery.title = title) : null
-    if (tags) {
-        filterQuery.tags = {}
-        filterQuery.tags.$all = tags.split(",")
+    title ? (filterQuery.title = { $regex: title, $options: "i" }) : null
+    tags ? (filterQuery.tags = { $all: tags.split(",") }) : null
+    if (author) {
+        // Search for name of author
+        const user = await User.findOne({
+            full_name: { $regex: author, $options: "i" }
+        }).exec()
+
+        // If found, add id of author to filter query
+        if (user) filterQuery.author = user._id
     }
+
 
     // Handle sort params
     const allowedSortValues = ["asc", "desc", "ascending", "descending", 1, -1]
@@ -32,21 +39,53 @@ blogRouter.get("/", async(req, res) => {
     allowedSortValues.includes(timestamp) ? (sortQuery.timestamp = timestamp) : null
 
 
-    const publishedBlogs = await Blog.find({
-        state: "published"
-    })
-    .populate("author")
-    .sort(sortQuery)
-    .exec()
+    try {
+        const publishedBlogs = await Blog
+            .find({ state: "published" })
+            .populate("author", "full_name email -_id")
+            .find(filterQuery)
+            .sort(sortQuery)
+            .exec()
+
+        // Handle pagination
+        const pageSize = +req.query.pageSize || 20
+        const page = +req.query.page || 1
+        const start = (page - 1) * pageSize
+        const end = page * pageSize
+
+        const pagedBlogs = publishedBlogs.slice(start, end)
+
+        res.send({
+            message: "Successful!",
+            matches: publishedBlogs.length,
+            page,
+            pageSize,
+            blogs: pagedBlogs
+        })
+
+    } catch (err) {
+        next(err)
+    }
+
 
 
 })
 
-blogRouter.get("/:id", async(req, res, next) => {
+blogRouter.get("/:id", async (req, res, next) => {
     const id = req.params.id
 
     try {
-        const blog = await Blog.findById(id).exec()
+        const blog = await Blog
+            .findOne({_id: id, state: "published"})
+            .populate("author", "full_name email -_id")
+            .exec()
+
+        if (!blog) return res.status(404).send({ message: "Blog does not exist" })
+
+        // Increment read count of blog by one
+        blog.read_count++
+        await blog.save()
+
         res.send(blog)
 
     } catch (err) {

@@ -3,6 +3,10 @@ const { isEmail } = require("validator").default
 const bcrypt = require("bcrypt")
 
 const userSchema = new Schema({
+    first_name: {type: String, required: true},
+    last_name: {type: String, required: true},
+    full_name: String,
+    
     email: {
         type: String,
         unique: true,
@@ -18,12 +22,15 @@ const userSchema = new Schema({
             },
         }
     },
-    first_name: {type: String, required: true},
-    last_name: {type: String, required: true},
+
     password: {type: String, required: true}
 })
 
 userSchema.pre("save", async function(next) {
+    // Set full name
+    this.full_name = this.first_name + " " + this.last_name
+
+    // Hash password
     const hash = await bcrypt.hash(this.password, 10)
     this.password = hash
     next()

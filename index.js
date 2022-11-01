@@ -22,7 +22,7 @@ app.set("views", "./views")
 app.use(express.urlencoded({extended: false}))
 
 app.get("/", (req, res) => {
-    res.send("Welcome home")
+    res.redirect("/blog")
 })
 
 app.use("/auth", authRouter)
