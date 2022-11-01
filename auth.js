@@ -34,12 +34,15 @@ function authenticate(req, res, next) {
     passport.authenticate(
         "jwt", 
         {session: false}, 
-        (err, user, info, status) => {    
+        (err, user, info, status) => {
             // Return errors from jwt strategy
             if (err) return next(err)
-
+            
             // Return other errors
             if (info) return next(info)
+
+            // Attach the user to the request object
+            req.user = user
 
             // Continue 
             next()
