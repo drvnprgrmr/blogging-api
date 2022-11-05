@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("./partials/head")  %>
+    <title>Signup</title>
+</head>
+<body>
+    <h2>Signup</h2>
+    <p>Create an account to use the blogging API</p>
+    <form action="/auth/signup" method="post">
+        <label for="fn">First name</label>
+        <input type="text" name="first_name" id="fn" required>
+        <br>
+        <label for="ln">Last name</label>
+        <input type="text" name="last_name" id="ln" required>
+        <br>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required>
+        <br>
+        <label for="pass">Password</label>
+        <input type="text" name="password" id="pass" required>
+
+    </form>
+</body>
+</html>
