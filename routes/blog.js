@@ -4,6 +4,7 @@ const User = require("../models/user")
 
 const blogRouter = express.Router()
 
+// Get all published blogs
 blogRouter.get("/", async (req, res, next) => {
     const filterQuery = {}
     const sortQuery = {}
@@ -71,6 +72,7 @@ blogRouter.get("/", async (req, res, next) => {
 
 })
 
+// Get a specific blog 
 blogRouter.get("/:id", async (req, res, next) => {
     const id = req.params.id
 

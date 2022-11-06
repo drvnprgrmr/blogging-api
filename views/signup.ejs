@@ -5,21 +5,34 @@
     <title>Signup</title>
 </head>
 <body>
-    <h2>Signup</h2>
-    <p>Create an account to use the blogging API</p>
-    <form action="/auth/signup" method="post">
-        <label for="fn">First name</label>
-        <input type="text" name="first_name" id="fn" required>
-        <br>
-        <label for="ln">Last name</label>
-        <input type="text" name="last_name" id="ln" required>
-        <br>
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" required>
-        <br>
-        <label for="pass">Password</label>
-        <input type="text" name="password" id="pass" required>
-
-    </form>
+    <%- include("./partials/nav") %>
+    
+    <div class="container">
+        <h2>Signup</h2>
+        <p>Create an account to use the blogging API</p>
+        <form action="/auth/signup" method="post">
+            <div class="mb-3">
+                <label for="fn">First name</label>
+                <input type="text" name="first_name" id="fn" required>
+            </div>
+        
+            <div class="mb-3">
+                <label for="ln">Last name</label>
+                <input type="text" name="last_name" id="ln" required>
+            </div>
+        
+            <div class="mb-3">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" required>
+            </div>
+        
+            <div class="mb-3">
+                <label for="pass">Password</label>
+                <input type="password" name="password" id="pass" required>
+            </div>
+        
+            <input type="submit" class="btn btn-primary" value="Signup">
+        </form>
+    </div>
 </body>
 </html>
