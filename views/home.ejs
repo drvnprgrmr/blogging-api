@@ -10,54 +10,54 @@
     <div class="container">
         <p>Welcome to the blogging API</p>
 
-        <h2>Routes</h2>
-        <div class="mb-3">
+        <h2 class="text-primary">Routes</h2>
+        <div class="mb-3 list-group">
             <h3>Auth</h3>
-            <div class="mb-2">
+            <div class="mb-2 list-group-item">
                 <h4>/auth/signup <span>POST</span></h4>
                 <p>Create an account on the API</p>
-            </div>
-            <div class="mb-2">
+            </div> 
+            <div class="mb-2 list-group-item">
                 <h4>/auth/signin <span>POST</span></h4>
                 <p>Log in and get API token</p>
             </div>
 
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 list-group">
             <h3>Blog</h3>
             <p>Note: Anyone can access these routes</p>
-            <div class="mb-2">
+            <div class="mb-2 list-group-item">
                 <h4>/blog <span>GET</span></h4>
                 <p>Get all published blogs</p>
             </div>
-            <div class="mb-2">
+            <div class="mb-2 list-group-item">
                 <h4>/blog/:id <span>GET</span></h4>
                 <p>Get a specific blog</p>
             </div>
         
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 list-group ">
             <h3>Writer</h3>
             <p>Note: You must submit your token with these routes</p>
-            <div class="mb-2">
+            <div class="mb-2 list-group-item">
                 <h4>/writer/blog <span>POST</span></h4>
                 <p>Create a new blog</p>
             </div>
-            <div class="mb-2">
+            <div class="mb-2 list-group-item">
                 <h4>/writer/blog <span>GET</span></h4>
                 <p>Get all blogs by logged in user</p>
             </div>
-            <div class="mb-2">
+            <div class="mb-2 list-group-item">
                 <h4>/writer/publish/:id <span>PATCH</span></h4>
                 <p>Publish blog with given id</p>
             </div>
-            <div class="mb-2">
+            <div class="mb-2 list-group-item">
                 <h4>/writer/edit/:id <span>PATCH</span></h4>
                 <p>Edit blog with given id</p>
             </div>
-            <div class="mb-2">
+            <div class="mb-2 list-group-item">
                 <h4>/writer/blog/:id <span>DELETE</span></h4>
                 <p>Delete blog with given id</p>
             </div>
