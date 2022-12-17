@@ -8,6 +8,9 @@ const writerRouter = require("./routes/writer")
 
 const authenticate = require("./auth")
 
+const logger = require("./logging/logger")
+const httpLogger = require("./logging/httpLogger")
+
 
 const app = express()
 
@@ -17,6 +20,9 @@ app.set("views", "./views")
 app.use(express.urlencoded({extended: false}))
 app.use(express.static(__dirname + "/public"))
 app.use(express.static(__dirname + "/node_modules/bootstrap/dist"))
+
+// Log all HTTP requests
+app.use(httpLogger)
 
 // EJS Views
 app.get("/", (req, res) => {
@@ -44,6 +50,8 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
+    // Log all errors
+    logger.error(err)
     res.status(err.status || 500).send({
         message: "An error occured. Oops!",
         error: err.toString()
