@@ -9,9 +9,8 @@ const port = process.env.PORT || 3000
 
 // Start application
 app.listen(port, () => {
-    logger.info("App is running on port ", port)
+    logger.info("App is running on port " + port)
     console.log("App is running on port ", port)
-    
 })
 
 // Connect to MongoDB instance

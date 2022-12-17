@@ -11,7 +11,6 @@ const authenticate = require("./auth")
 const logger = require("./logging/logger")
 const httpLogger = require("./logging/httpLogger")
 
-
 const app = express()
 
 app.set("view engine", "ejs")
