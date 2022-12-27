@@ -1,12 +1,8 @@
-const express = require("express")
 const Blog = require("../models/blog")
 
-const writerRouter = express.Router()
-
-// Create a new blog
-writerRouter.post("/blog", async(req, res, next) => {
+async function createBlog(req, res, next) {
     const blogDetails = req.body
-    
+
     // Get logged in user's id
     const userId = req.user.id
 
@@ -42,10 +38,9 @@ writerRouter.post("/blog", async(req, res, next) => {
     } catch (err) {
         next(err)
     }
-})
+}
 
-// Get all blogs by the logged in user
-writerRouter.get("/blog", async(req, res, next) => {
+async function getUserBlog(req, res, next) {
     // Get logged in user's id
     const userId = req.user.id
 
@@ -78,15 +73,14 @@ writerRouter.get("/blog", async(req, res, next) => {
             pageSize,
             blogs: pagedBlogs
         })
-        
+
     } catch (err) {
         next(err)
     }
 
-})
+}
 
-// Publish a blog
-writerRouter.patch("/publish/:id", async(req, res, next) => {
+async function publishBlog(req, res, next) {
     const blogId = req.params.id
 
     try {
@@ -115,10 +109,9 @@ writerRouter.patch("/publish/:id", async(req, res, next) => {
     } catch (err) {
         next(err)
     }
-})
+}
 
-// Edit a blog
-writerRouter.patch("/edit/:id", async(req, res, next) => {
+async function editBlog(req, res, next) {
     const blogId = req.params.id
 
     // Get possible fields to be updated
@@ -135,13 +128,13 @@ writerRouter.patch("/edit/:id", async(req, res, next) => {
                 message: "Blog not found!"
             })
         }
-        
+
         // Update blog based on values
         title ? (blog.title = title) : null
         description ? (blog.description = description) : null
         tags ? (blog.tags = tags.split(/\s+|\s*,\s*/)) : null
         body ? (blog.body = body) : null
-        
+
         // Calculate new reading_time of blog
         const wordCount = body.split(/\s+/).length
         const reading_time = Math.floor(wordCount / 200) || 1
@@ -161,10 +154,9 @@ writerRouter.patch("/edit/:id", async(req, res, next) => {
     } catch (err) {
         next(err)
     }
-})
+}
 
-// Delete a blog
-writerRouter.delete("/blog/:id", async(req, res, next) => {
+async function deleteBlog(req, res, next) {
     const blogId = req.params.id
 
     try {
@@ -177,16 +169,24 @@ writerRouter.delete("/blog/:id", async(req, res, next) => {
         }
 
         // Delete the blog
-        await Blog.deleteOne({_id: blogId})
+        await Blog.deleteOne({ _id: blogId })
 
         res.send({
             message: "Blog deleted successfully!",
             blog
         })
-        
+
     } catch (err) {
         next(err)
     }
-})
+}
 
-module.exports = writerRouter
+
+
+module.exports = {
+    createBlog,
+    getUserBlog,
+    editBlog,
+    deleteBlog,
+    publishBlog
+}

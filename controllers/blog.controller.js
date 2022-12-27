@@ -1,11 +1,8 @@
-const express = require("express")
 const Blog = require("../models/blog")
 const User = require("../models/user")
 
-const blogRouter = express.Router()
 
-// Get all published blogs
-blogRouter.get("/", async (req, res, next) => {
+async function getAllBlogs(req, res, next) {
     const filterQuery = {}
     const sortQuery = {}
 
@@ -68,17 +65,14 @@ blogRouter.get("/", async (req, res, next) => {
         next(err)
     }
 
+}
 
-
-})
-
-// Get a specific blog 
-blogRouter.get("/:id", async (req, res, next) => {
+async function getBlog(req, res, next) {
     const id = req.params.id
 
     try {
         const blog = await Blog
-            .findOne({_id: id, state: "published"})
+            .findOne({ _id: id, state: "published" })
             .populate("author", "full_name email -_id")
             .exec()
 
@@ -93,7 +87,9 @@ blogRouter.get("/:id", async (req, res, next) => {
     } catch (err) {
         next(err)
     }
-})
+}
 
-
-module.exports = blogRouter
+module.exports = {
+    getAllBlogs,
+    getBlog
+}

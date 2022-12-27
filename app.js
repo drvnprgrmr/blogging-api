@@ -2,9 +2,9 @@ require("dotenv").config()
 
 const express = require("express")
 
-const authRouter = require("./routes/auth")
-const blogRouter = require("./routes/blog")
-const writerRouter = require("./routes/writer")
+const authRouter = require("./routes/auth.router")
+const blogRouter = require("./routes/blog.router")
+const writerRouter = require("./routes/writer.router")
 
 const authenticate = require("./auth")
 
