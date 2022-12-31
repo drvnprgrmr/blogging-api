@@ -1,6 +1,7 @@
 require("dotenv").config()
 
 const express = require("express")
+const cookieParser = require("cookie-parser")
 
 const authRouter = require("./routes/auth.router")
 const blogRouter = require("./routes/blog.router")
@@ -17,6 +18,7 @@ app.set("views", "./views")
 app.use(express.urlencoded({extended: false}))
 app.use(express.static(__dirname + "/public"))
 app.use(express.static(__dirname + "/node_modules/bootstrap/dist"))
+app.use(cookieParser())
 
 // EJS Views
 app.get("/", (req, res) => {
