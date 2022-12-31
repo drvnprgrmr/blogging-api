@@ -63,8 +63,12 @@ async function signinUser(req, res) {
         const payload = {
             id: user._id
         }
+        // Create token and sign it with secret
         const JWT_SECRET = process.env.JWT_SECRET
         const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" })
+
+        // Try saving token to cookie for accessibility from a browser
+        res.cookie("jwt", token, {httpOnly: true, maxAge: 60 * 60 * 1000})
 
         return res.send({
             message: "You've signed in successfully",

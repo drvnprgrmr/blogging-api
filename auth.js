@@ -2,13 +2,27 @@ const passport = require("passport")
 const User = require("./models/user")
 
 const JWTStrategy = require("passport-jwt").Strategy
-const ExtractJWT = require("passport-jwt").ExtractJwt
+const {
+    fromAuthHeaderAsBearerToken, fromExtractors
+} = require("passport-jwt").ExtractJwt
 
+
+// Cookie extractor function
+function fromCookie(req) {
+    let token = null
+    if (req.cookies) token = req.cookies["jwt"]
+    return token
+}
 
 passport.use(new JWTStrategy(
     {
         secretOrKey: process.env.JWT_SECRET,
-        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
+        jwtFromRequest: fromExtractors([
+            // Check for token in "Auth" header first
+            fromAuthHeaderAsBearerToken(),
+            // Check for token in browser cookies
+            fromCookie
+        ])
     },
     async (payload, done) => {
         // Retrieve the user's id from the payload
